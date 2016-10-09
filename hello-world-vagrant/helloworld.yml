@@ -21,7 +21,7 @@
 
 
     - name: Add port forwarding to Vagrantfile
-      lineinfile: "dest=vagrant/Vagrantfile regexp=\"# config.vm.network\" line=\"config.vm.network \"forwarded_port\", guest: 80, host: 8085\" state=present"
+      lineinfile: "dest=vagrant/Vagrantfile regexp=\"config.vm.network \"forwarded_port\"\" line=\"config.vm.network \"forwarded_port\", guest: 80, host: 8085\" state=present"
 
     - name: Bring up vagrant instance
       command: vagrant up --provider virtualbox
