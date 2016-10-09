@@ -1,0 +1,5 @@
+- hosts: localhost
+  tasks:
+    - command: whoami
+      register: name
+    - debug: msg="hello {{ name.stdout }}"
