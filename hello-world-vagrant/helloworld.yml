@@ -1,5 +1,8 @@
 - hosts: localhost
+  tags: play1
+  gather_facts: True
   tasks:
+    - debug: var=ansible_distribution
     - name: Create home for vagrant machine
       file: path=vagrant state=directory
 
@@ -18,11 +21,19 @@
 
 
     - name: Add port forwarding to Vagrantfile
-      lineinfile: "dest=vagrant/Vagrantfile regexp='# config.vm.network \"forwarded_port\", guest: 80, host: 8080' line='config.vm.network \"forwarded_port\", guest: 80, host: 8085'"
+      lineinfile: "dest=vagrant/Vagrantfile regexp=\"# config.vm.network\" line=\"config.vm.network \"forwarded_port\", guest: 80, host: 8085\" state=present"
 
     - name: Bring up vagrant instance
       command: vagrant up --provider virtualbox
       args:
         chdir: vagrant
 
-
+# Mutliple plays
+- hosts: localhost
+  tags: play2
+  tasks:
+    - name: Hello world
+      command: whoami
+      register: name
+    - name: print message
+      debug: msg="hello {{ name.stdout }}"
