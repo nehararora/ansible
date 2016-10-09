@@ -1,0 +1,28 @@
+- hosts: localhost
+  tasks:
+    - name: Create home for vagrant machine
+      file: path=vagrant state=directory
+
+    - name: Check if Vagrantfile exists
+      stat: path=vagrant/Vagrantfile
+      register: stats
+
+    - name: Print stats
+      debug: var=stats
+
+    - name: Run vagrant init
+      command: vagrant init ubuntu/trusty64
+      args:
+        chdir: vagrant
+      when: not stats.stat.exists
+
+
+    - name: Add port forwarding to Vagrantfile
+      lineinfile: "dest=vagrant/Vagrantfile regexp='# config.vm.network \"forwarded_port\", guest: 80, host: 8080' line='config.vm.network \"forwarded_port\", guest: 80, host: 8085'"
+
+    - name: Bring up vagrant instance
+      command: vagrant up --provider virtualbox
+      args:
+        chdir: vagrant
+
+
